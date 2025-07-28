@@ -1,8 +1,6 @@
-Here’s a complete and accurate `README.md` for your **Java RBAC System**, merging all details you provided with the actual Java code structure used in your project:
 
----
 
-# 🔐 Role-Based Access Control (RBAC) System
+## 🔐 Role-Based Access Control (RBAC) System
 
 ![Java](https://img.shields.io/badge/Java-17%2B-blue)
 ![H2 Database](https://img.shields.io/badge/H2-Embedded-green)
