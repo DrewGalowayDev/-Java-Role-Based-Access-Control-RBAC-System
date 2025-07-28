@@ -1,199 +1,152 @@
+Here’s a complete and accurate `README.md` for your **Java RBAC System**, merging all details you provided with the actual Java code structure used in your project:
+
+---
+
 # 🔐 Role-Based Access Control (RBAC) System
 
 ![Java](https://img.shields.io/badge/Java-17%2B-blue)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-orange)
-![JDBC](https://img.shields.io/badge/JDBC-4.2-green)
+![H2 Database](https://img.shields.io/badge/H2-Embedded-green)
+![JDBC](https://img.shields.io/badge/JDBC-4.2-yellow)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
-A secure Java-based Role-Based Access Control system that manages user authentication, role assignments, and permission-based access to system resources.
+A secure, console-based Java Role-Based Access Control (RBAC) system that manages user authentication and role-based access using an embedded H2 database and SHA-256 password hashing.
+
+---
 
 ## 🌟 Features
 
-- **Secure Authentication**: Password hashing with BCrypt
-- **Role Management**: Predefined roles (Admin, Editor, Viewer) with hierarchical permissions
-- **Dynamic Access Control**: Menu options adapt based on user permissions
-- **CRUD Operations**: Admin can manage users and roles
-- **Audit Logging**: Comprehensive tracking of all user actions
-- **Database Persistence**: MySQL storage for users, roles, permissions, and logs
-- **Console Interface**: Intuitive role-based menu system
+* **Console-Based UI**: Simple terminal interface for user interaction.
+* **Authentication**: Secure password storage using SHA-256 hashing.
+* **Role Management**: Predefined roles – `ADMIN`, `EDITOR`, `VIEWER`.
+* **Dynamic Access Control**: Permissions are enforced based on assigned roles.
+* **Embedded H2 DB**: Lightweight in-memory or file-based database.
+* **No External Dependencies**: Pure Java with JDBC.
 
-## 🗃️ Database Schema
+---
 
-```mermaid
-erDiagram
-    users ||--o{ user_roles : "has"
-    roles ||--o{ role_permissions : "has"
-    permissions ||--o{ role_permissions : "assigned to"
-    users ||--o{ audit_logs : "performs"
-    
-    users {
-        int id PK
-        string username
-        string password
-        string full_name
-    }
-    
-    roles {
-        int id PK
-        string name
-    }
-    
-    permissions {
-        int id PK
-        string name
-    }
-    
-    user_roles {
-        int user_id FK
-        int role_id FK
-    }
-    
-    role_permissions {
-        int role_id FK
-        int permission_id FK
-    }
-    
-    audit_logs {
-        int id PK
-        int user_id FK
-        string action
-        timestamp timestamp
-    }
+## 📂 Project Structure
+
+```bash
+.
+├── Main.java          # Console interface and entry point
+├── Role.java          # Enum defining roles
+├── User.java          # User data model
+├── DBHelper.java      # Handles database setup and user queries
+├── AuthService.java   # Registration, login, and hashing logic
 ```
+
+---
 
 ## ⚙️ Technologies Used
 
-- **Core Java**: Object-oriented programming, Collections
-- **Database**: MySQL with JDBC
-- **Security**: BCrypt for password hashing
-- **Logging**: Comprehensive audit trails
-- **Build**: Maven for dependency management
+* **Java 17+**
+* **H2 Database (embedded)**
+* **JDBC**
+* **SHA-256 for password hashing**
+
+---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 🔧 Prerequisites
 
-- Java 17+
-- MySQL 8.0+
-- Maven
+* Java 17 or higher
+* Any IDE or terminal with Java support
 
-### Installation
+### 🛠 Installation & Run
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/your-username/java-rbac-system.git
    cd java-rbac-system
    ```
 
-2. **Set up MySQL database**:
-   ```sql
-   CREATE DATABASE rbac_db;
-   USE rbac_db;
-   
-   CREATE USER 'admin'@'localhost' IDENTIFIED BY 'SecurePass123!';
-   GRANT ALL PRIVILEGES ON rbac_db.* TO 'admin'@'localhost';
-   FLUSH PRIVILEGES;
-   ```
+2. **Compile and run**:
 
-3. **Update database configuration**:
-   Edit the DB_URL, DB_USER, and DB_PASSWORD constants in `RBACSystem.java`:
-   ```java
-   private static final String DB_URL = "jdbc:mysql://localhost:3306/rbac_db";
-   private static final String DB_USER = "admin";
-   private static final String DB_PASSWORD = "SecurePass123!";
-   ```
-
-4. **Add dependencies to pom.xml**:
-   ```xml
-   <dependencies>
-       <dependency>
-           <groupId>mysql</groupId>
-           <artifactId>mysql-connector-java</artifactId>
-           <version>8.0.28</version>
-       </dependency>
-       <dependency>
-           <groupId>org.mindrot</groupId>
-           <artifactId>jbcrypt</artifactId>
-           <version>0.4</version>
-       </dependency>
-   </dependencies>
-   ```
-
-5. **Build and run**:
    ```bash
-   mvn compile
-   mvn exec:java -Dexec.mainClass="RBACSystem"
+   javac *.java
+   java Main
    ```
 
-## 🖥️ Usage
+---
 
-### Login Credentials
-- **Admin**: `admin` / `admin123`
-- **Editor**: Create through admin interface
-- **Viewer**: Create through admin interface
+## 🧪 Usage
 
-### Role Permissions
+Upon running the app, users can register or log in.
 
-| Role    | Permissions                                                                 |
-|---------|-----------------------------------------------------------------------------|
-| Admin   | Full access: User/Role CRUD, Dashboard, Data Edit                          |
-| Editor  | Dashboard view, Data edit, User view                                       |
-| Viewer  | Dashboard view only                                                        |
+### ✍️ Register
 
-### Features by Role
+Provide:
 
-1. **Admin**:
-   - Create/View/Delete users
-   - View roles and permissions
-   - Access dashboard
-   - Edit data
-   - View audit logs
+* Username
+* Password
+* Role (ADMIN, EDITOR, VIEWER)
 
-2. **Editor**:
-   - View dashboard
-   - Edit data
-   - View user list
+### 🔐 Login
 
-3. **Viewer**:
-   - View dashboard only
+Provide:
 
-## 📊 Audit Logging
+* Username
+* Password
 
-All system actions are logged with:
-- User ID
-- Action description
-- Timestamp
+### 👥 Role-Based Outputs
 
-Example log entries:
-```
-1 | 1 | LOGIN_SUCCESS | 2023-06-21 14:30:45
-2 | 1 | USER_CREATE: editor1 | 2023-06-21 14:35:22
-3 | 1 | DATA_EDIT | 2023-06-21 14:40:15
-4 | 1 | LOGOUT | 2023-06-21 14:45:30
+| Role   | Permissions                          |
+| ------ | ------------------------------------ |
+| ADMIN  | Full access, administrative messages |
+| EDITOR | Edit/update content                  |
+| VIEWER | Read-only access                     |
+
+Console outputs vary depending on the role after login.
+
+---
+
+## 🧠 Code Highlights
+
+### 🔑 Password Hashing
+
+Uses SHA-256 hashing algorithm for storing passwords:
+
+```java
+MessageDigest md = MessageDigest.getInstance("SHA-256");
+byte[] hash = md.digest(password.getBytes());
 ```
 
-## 🚀 Bonus Features
+### 📄 Database Initialization
 
-1. **Role Hierarchy**: Admin > Editor > Viewer permission inheritance
-2. **Password Security**: BCrypt with salt for secure storage
-3. **Database Initialization**: Automatic setup of default roles and admin user
-4. **Comprehensive Logging**: Detailed action tracking for security audits
+H2 database is initialized on application start with the `users` table:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255),
+  password VARCHAR(255),
+  role VARCHAR(50)
+);
+```
+
+---
 
 ## 📚 Learning Outcomes
 
-- Implemented role-based access control principles
-- Designed secure authentication with password hashing
-- Created complex database relationships (users-roles-permissions)
-- Developed audit logging system for security compliance
-- Built dynamic UI based on user permissions
-- Applied JDBC for database operations
-- Used OOP principles for clean architecture
+* Applied role-based access control principles
+* Implemented secure password handling using SHA-256
+* Designed modular Java system with OOP best practices
+* Managed database operations using embedded JDBC + H2
+* Built a CLI tool enforcing authentication + authorization
+
+---
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
 
 ## ✉️ Contact
 
-For questions or feedback: 
-[robinsonotoch7@gmail.com](mailto:robinsonotoch7@gmail.com)
+For questions or feedback, feel free to reach out:
+📧 [robinsonotoch7@gmail.com.com](mailto:robinsonotoch7@gmail.com)
+
+---
